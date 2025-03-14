@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>AIPAI – Versión 1.0 Release (ActIPAInt)</title>
+  <link rel="stylesheet" href="Source/style.css">
+  <link rel="icon" href="Assets/Uziel.png">
+</head>
+<body>
+  <div id="app">
+    <!-- Panel superior (opciones del proyecto) -->
+    <div id="topToolbar">
+      <div class="tool-group">
+        <button id="undo">↩️ Deshacer</button>
+        <button id="redo">↪️ Rehacer</button>
+      </div>
+      <div class="tool-group">
+        <button id="loadImage">🖼️ Cargar</button>
+        <input type="file" id="fileInput" accept="image/*" style="display:none;">
+        <button id="saveImage">💾 Guardar</button>
+      </div>
+      <div class="tool-group">
+        <button id="clearCanvas">🧹 Limpiar lienzo</button>
+        <button id="resizeCanvas">📐 Redimensionar lienzo</button>
+      </div>
+      <div class="tool-group">
+        <label>
+          🔍 Zoom:
+          <input type="range" id="zoomRange" min="10" max="1000" step="5" value="100">
+          <span id="zoomValue">100%</span>
+        </label>
+      </div>
+      <div class="tool-group">
+        <label>
+          🖼️ Fondo:
+          <select id="bgPattern">
+            <option value="none">Ninguno</option>
+            <option value="light">Cuadrícula Clara</option>
+            <option value="dark">Cuadrícula Oscura</option>
+          </select>
+        </label>
+      </div>
+      <div class="tool-group">
+        <button id="helpBtn">❓</button>
+      </div>
+    </div>
+    <!-- Panel lateral izquierdo (capas) -->
+    <div id="sideBar">
+      <div class="layer-controls-top">
+        <button id="addLayer">➕</button>
+        <button id="deleteLayer">🗑️</button>
+      </div>
+      <h3>Capas</h3>
+      <ul id="layersList">
+        <li class="active">Capa 1
+          <div class="layer-item-controls">
+            <button>👁️</button>
+            <button>↑</button>
+            <button>↓</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <!-- Área del lienzo -->
+    <div id="canvasWrapper">
+      <div id="canvasArea" style="transform: scale(1); background: transparent;">
+        <!-- Overlay de selección -->
+        <div id="selectionOverlay">
+          <canvas id="selectionCanvas"></canvas>
+        </div>
+        <!-- Contenedor de botones de selección -->
+        <div id="selectionButtons">
+          <button id="confirmSelection">✔</button>
+          <button id="cancelSelection">✖</button>
+        </div>
+      </div>
+    </div>
+    <!-- Panel lateral derecho (herramientas y configuración) -->
+    <div id="rightToolbar">
+      <h3>Herramientas</h3>
+      <div class="tool-setting">
+        <label for="tool">Herramienta:</label>
+        <select id="tool">
+          <option value="pencil">✏️ Pincel</option>
+          <option value="line">📏 Línea</option>
+          <option value="rect">▭ Rectángulo</option>
+          <option value="circle">⚪ Círculo</option>
+          <option value="eraser">🧽 Borrador</option>
+          <option value="fill">🪣 Cubeta</option>
+          <option value="selectRect">🔲 Selección (Rectangular)</option>
+          <option value="selectFree">✂️ Selección (Libre)</option>
+        </select>
+      </div>
+      <div class="tool-setting">
+        <label for="brushType">Tipo de Pincel:</label>
+        <select id="brushType">
+          <option value="solid">🔲 Sólido</option>
+          <option value="normal">🖌️ Normal</option>
+          <option value="spray">💨 Spray</option>
+          <option value="calligraphy">✒️ Caligráfico</option>
+          <option value="marker">🖍️ Marcador</option>
+        </select>
+      </div>
+      <div class="tool-setting">
+        <label for="color">Color:</label>
+        <input type="color" id="color" value="#000000">
+        <input type="range" id="colorAlpha" min="0" max="1" step="0.01" value="1">
+        <span id="alphaValue">100%</span>
+      </div>
+      <div class="tool-setting">
+        <label for="brushSize">Tamaño:</label>
+        <input type="range" id="brushSize" min="1" max="50" value="5">
+        <span id="brushSizeValue">5px</span>
+      </div>
+      <div class="tool-setting">
+        <label for="bucketOptions">Cubeta:</label>
+        <div class="dropdown">
+          <button class="dropbtn">Opciones</button>
+          <div class="dropdown-content">
+            <label>
+              Tolerancia:
+              <input type="range" id="bucketTolerance" min="0" max="100" value="0">
+              <span id="toleranceValue">0%</span>
+            </label>
+            <label>
+              Derrame:
+              <input type="range" id="spillTolerance" min="0" max="100" value="0">
+              <span id="spillValue">0px</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div id="clipboardControls">
+        <button id="copyBtn">📋</button>
+        <button id="cutBtn">✂️</button>
+        <button id="pasteBtn">📥</button>
+      </div>
+    </div>
+    <!-- Modal de Ayuda -->
+    <div id="helpModal">
+      <div class="modal-content">
+        <h3>Atajos, Funciones e Instrucciones</h3>
+        <ul>
+          <li><strong>Q</strong>: ✏️ Pincel (Sólido)</li>
+          <li><strong>W</strong>: 📏 Línea</li>
+          <li><strong>E</strong>: ▭ Rectángulo</li>
+          <li><strong>R</strong>: ⚪ Círculo</li>
+          <li><strong>T</strong>: 🧽 Borrador</li>
+          <li><strong>Y</strong>: 🪣 Cubeta (relleno con transparencia)</li>
+          <li><strong>U</strong>: 🔲 Selección (Rectangular)</li>
+          <li><strong>I</strong>: ✂️ Selección (Libre)</li>
+          <li><strong>Ctrl + (mover mouse)</strong>: 🖐️ Herramienta de Mano (Pan)</li>
+          <li><strong>Ctrl+C / Ctrl+X / Ctrl+V</strong>: 📋 Copiar, Cortar y Pegar la selección</li>
+          <li><strong>Zoom:</strong> 🔍 Controlado por el slider (intervalos de 5%)</li>
+          <li><strong>Redimensionar lienzo:</strong> 📐 Cambia el tamaño del área de dibujo</li>
+          <li><strong>Cargar imagen:</strong> 🖼️ Importa una imagen y la muestra como selección (preserva la transparencia)</li>
+          <li><strong>Guardar imagen:</strong> 💾 Combina todas las capas y guarda en PNG</li>
+          <li><strong>Limpiar lienzo:</strong> 🧹 Borra todo el dibujo actual</li>
+          <li><strong>Capas:</strong> ➕ Agregar, 🗑️ Eliminar, reordenar y controlar visibilidad</li>
+        </ul>
+        <p><strong>Descripción detallada de la aplicación:</strong><br>
+          AIPAI (ActiPaint hecho con IA/AI como herramienta principal) es una aplicación web inspirada en MS Paint, desarrollada en HTML, CSS y JavaScript. Esta herramienta te permite crear y editar dibujos de manera intuitiva con funciones avanzadas como:
+          <ul>
+            <li><strong>Manejo de capas:</strong> Trabaja con múltiples capas sin perder flexibilidad.</li>
+            <li><strong>Diversas herramientas de dibujo:</strong> Incluye pincel (sólido, normal, spray, caligráfico y marcador), línea, rectángulo, círculo y borrador.</li>
+            <li><strong>Herramientas de selección:</strong> Usa selección rectangular o libre para mover, copiar, cortar y pegar sin alterar el resto del dibujo.</li>
+            <li><strong>Relleno (cubeta):</strong> Rellena áreas con tolerancia y derrame ajustables, manteniendo la transparencia.</li>
+            <li><strong>Zoom y panning:</strong> Acércate o aleja el lienzo y muévete por la imagen fácilmente.</li>
+            <li><strong>Importar y exportar imágenes:</strong> Carga imágenes y guárdalas en PNG preservando la transparencia.</li>
+          </ul>
+          Esta aplicación combina la sencillez de una herramienta clásica con funcionalidades modernas que facilitan el proceso creativo.
+        </p>
+        <!-- Se insertan dos imágenes antes de los créditos -->
+        <div class="help-images">
+          <a href="Poner enlace a la pagina de la prepa" target="_blank">
+            <img src="Assets/132logo.png" alt="Imagen con enlace" style="max-width: 100%;">
+          </a>
+          <p style="font-size: 0.8em; text-align: center;">↑↑↑ Tuve que poner esto ↑↑↑</p><br><br><br>
+          <img src="Assets/UcreatorDesc.png" alt="Imagen normal" style="max-width: 100%;">
+        </div>
+        <p>
+          Creditos: <br>
+          <strong><em>Uziel &amp; ChatGPT</em></strong>
+        </p>
+        <p>
+          <em>"Aprendí a pensar"<br>-ChatGPT</em>
+        </p>
+        <button id="closeHelp">Cerrar</button>
+      </div>
+    </div>
+  </div>
+  <script src="Source/main.js"></script>
+</body>
+</html>
