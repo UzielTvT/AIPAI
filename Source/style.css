@@ -1,0 +1,308 @@
+/* Reset y estilos generales */
+* {
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f9;
+  }
+  
+  /* Layout usando CSS Grid con tres columnas (izquierdo, central, derecho) */
+  #app {
+    display: grid;
+    grid-template-areas:
+      "top top top"
+      "side main right";
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 250px 1fr 250px;
+    height: 100vh;
+  }
+  
+  /* Panel superior (topToolbar) */
+  #topToolbar {
+    grid-area: top;
+    background: linear-gradient(90deg, #4b6cb7, #182848);
+    color: #fff;
+    padding: 8px 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  
+  #topToolbar button,
+  #topToolbar select,
+  #topToolbar input[type="range"] {
+    padding: 6px 10px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  #topToolbar button:hover,
+  #topToolbar select:hover,
+  #topToolbar input[type="range"]:hover {
+    background: #e0e0e0;
+  }
+  
+  #topToolbar .tool-group {
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  /* Panel lateral izquierdo (sideBar) */
+  #sideBar {
+    grid-area: side;
+    background: #2c3e50;
+    color: #ecf0f1;
+    padding: 15px;
+    overflow-y: auto;
+    box-shadow: inset -2px 0 5px rgba(0,0,0,0.2);
+  }
+  
+  #sideBar h3 {
+    margin-top: 0;
+    font-size: 18px;
+    border-bottom: 1px solid #34495e;
+    padding-bottom: 5px;
+  }
+  
+  #sideBar .layer-controls-top {
+    margin-bottom: 10px;
+    display: flex;
+    gap: 8px;
+  }
+  
+  #sideBar button {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 4px;
+    background: #34495e;
+    color: #ecf0f1;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  #sideBar button:hover {
+    background: #3d566e;
+  }
+  
+  #layersList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  #layersList li {
+    background: #3d566e;
+    margin-bottom: 6px;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+  }
+  
+  #layersList li.active {
+    background: #5dade2;
+    font-weight: bold;
+  }
+  
+  .layer-item-controls {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .layer-item-controls button {
+    padding: 4px;
+    border: none;
+    border-radius: 4px;
+    background: #2c3e50;
+    color: #ecf0f1;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .layer-item-controls button:hover {
+    background: #1a252f;
+  }
+  
+  /* Área del lienzo */
+  #canvasWrapper {
+    grid-area: main;
+    overflow: auto;
+    background: #444;  /* Fondo gris oscuro */
+    position: relative;
+  }
+  
+  #canvasArea {
+    position: relative;
+    width: 800px;
+    height: 600px;
+    margin: 20px auto;
+    background-color: transparent;
+    transform-origin: top left;
+    transition: transform 0.3s ease;
+  }
+  
+  .layerCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  /* Overlay de selección */
+  #selectionOverlay {
+    position: absolute;
+    border: 1px dashed #00f;
+    pointer-events: auto;
+    display: none;
+    cursor: move;
+    transition: none;
+    z-index: 1000;
+  }
+  
+  /* Botones de selección */
+  #selectionButtons {
+    position: absolute;
+    display: none;
+    z-index: 1001;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 5px;
+  }
+  
+  #selectionButtons button {
+    font-size: 18px;
+    padding: 4px 8px;
+    margin: 0 5px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    background: #2980b9;
+    color: #fff;
+    transition: background 0.2s ease;
+  }
+  
+  #selectionButtons button:hover {
+    background: #1c5980;
+  }
+  
+  /* Panel lateral derecho (rightToolbar) */
+  #rightToolbar {
+    grid-area: right;
+    background: #2c3e50;
+    color: #ecf0f1;
+    padding: 15px;
+    overflow-y: auto;
+    box-shadow: inset 2px 0 5px rgba(0,0,0,0.2);
+  }
+  
+  #rightToolbar h3 {
+    margin-top: 0;
+    font-size: 18px;
+    border-bottom: 1px solid #34495e;
+    padding-bottom: 5px;
+  }
+  
+  .tool-setting {
+    margin-bottom: 15px;
+  }
+  
+  .tool-setting label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+  
+  .tool-setting input,
+  .tool-setting select {
+    width: 100%;
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: none;
+  }
+  
+  /* Dropdown para opciones de cubeta */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropbtn {
+    background-color: #34495e;
+    color: #ecf0f1;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #34495e;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    padding: 10px;
+  }
+  
+  .dropdown-content label {
+    margin-bottom: 10px;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
+  /* Modal de Ayuda */
+  #helpModal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  #helpModal .modal-content {
+    background: #fff;
+    color: #000;
+    padding: 20px;
+    border-radius: 4px;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideDown 0.3s ease;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
